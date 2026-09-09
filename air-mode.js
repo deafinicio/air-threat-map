@@ -4406,6 +4406,69 @@ function updateThreatMarkerScale() {
   }
 
 
+  // AIR_ANALYTICS_TRACK_SELECTED_V1
+  function pushAirTrackSelectedAnalytics(
+    track,
+    trackId
+  ) {
+    try {
+      window.dataLayer =
+        window.dataLayer || [];
+
+      const threatType =
+        String(
+          (
+            track &&
+            (
+              track.threat ||
+              track.classification
+            )
+          ) ||
+          "unknown"
+        );
+
+      const objectCount =
+        Math.max(
+          1,
+          Number(
+            track &&
+            track.object_count
+          ) || 1
+        );
+
+      const active =
+        typeof isTrackFreshActive ===
+          "function"
+          ? isTrackFreshActive(track)
+          : Boolean(
+              track &&
+              (
+                track.active === true ||
+                track.is_active === true
+              )
+            );
+
+      window.dataLayer.push({
+        event: "air_track_selected",
+        track_id: String(
+          trackId || ""
+        ),
+        threat_type: threatType,
+        is_active:
+          active
+            ? "true"
+            : "false",
+        object_count: objectCount
+      });
+    } catch (error) {
+      console.warn(
+        "[AIR ANALYTICS] track event failed:",
+        error
+      );
+    }
+  }
+
+
   function selectAirTrack(
     track
   ) {
@@ -4417,6 +4480,11 @@ function updateThreatMarkerScale() {
     if (!id) {
       return;
     }
+    pushAirTrackSelectedAnalytics(
+      track,
+      id
+    );
+
 
     selectedAirTrackId =
       id;
