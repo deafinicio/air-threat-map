@@ -5,7 +5,7 @@
     document.documentElement.dataset.airStandalone ===
       "true";
 
-  const AIR_API_URL = "https://89-168-114-2.sslip.io/api/monitor/tracks";
+  const AIR_API_URL = "https://air-api.rc-kharkivindependence.space/api/monitor/tracks";
   const AIR_LOOKBACK_HOURS = 12;
   const AIR_LIMIT_THREADS = 200;
   const AIR_REFRESH_MS = 5000;
@@ -58,7 +58,7 @@ function isRequestedAirDebugTrack(track) {
 
 
   const AIR_DEBUG_API_BASE =
-    "https://89-168-114-2.sslip.io/api/monitor/debug-track";
+    "https://air-api.rc-kharkivindependence.space/api/monitor/debug-track";
 
 
   function buildAirDebugTrackUrl() {
