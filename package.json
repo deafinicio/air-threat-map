@@ -1,0 +1,11 @@
+{
+  "private": true,
+  "name": "air-threat-map",
+  "scripts": {
+    "test": "node tests/test_borders.cjs && node tests/test_dom.cjs"
+  },
+  "devDependencies": {
+    "jsdom": "26.1.0",
+    "leaflet": "1.9.4"
+  }
+}
