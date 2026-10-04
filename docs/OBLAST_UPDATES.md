@@ -30,7 +30,7 @@ The separate server bundle adds explicit region-departure parsing through a smal
 
 ## Aviation
 
-`air-region-alerts.js` loads the separate read-only `/api/monitor/region-alerts` feed. Its markers are fixed regional references for civilian public notices, with an aviation symbol and two red pulsing neon rings. They have no flight paths, aircraft counts or object positions and do not contribute to the target HUD. Activity reports and reported takeoffs are labeled separately. The bottom-right panel lists current report regions; selecting a region opens its reference and explanation. The map does not automatically change its view when a notice arrives.
+`air-region-alerts.js` loads the separate read-only `/api/monitor/region-alerts` feed. Its markers are fixed regional references for civilian public notices, with an aviation symbol and two red pulsing neon rings. They have no flight paths, aircraft counts or object positions and do not contribute to the target HUD. Activity reports and reported takeoffs are labeled separately. The panel above the bottom-left alarm indicator lists current report regions; selecting a region opens its reference and explanation. The map does not automatically change its view when a notice arrives. The legend retains its visibility and collapsed state when switching languages.
 
 | Region | User-provided approximate reference (lat, lng) |
 |---|---|

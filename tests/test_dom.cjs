@@ -41,6 +41,7 @@ function wait(ms){return new Promise(r=>setTimeout(r,ms))}
  assert.equal(d.documentElement.lang,'uk');assert.ok(d.querySelector('.air-disclaimer-body').textContent.includes('Карта не відображає'));
  d.querySelector('.air-disclaimer-ok').click();await wait(300);
  assert.ok(d.querySelector('#hud-live').textContent.includes('ДАНІ'));
+ assert.equal(d.querySelector('#air-threat-legend').style.display,'block');
  assert.equal(d.querySelector('#kharkiv-alert-state').textContent,'ВІДБІЙ');
  // Closing exit stays visible as a two-point straight line; two layers are glow and core.
  const lines=w.airTest.getLayers().filter(line=>line.__airTrackRole);
@@ -50,6 +51,9 @@ function wait(ms){return new Promise(r=>setTimeout(r,ms))}
  w.setAirLanguage('en');await wait(100);
  assert.equal(d.documentElement.lang,'en');assert.equal(w.localStorage.getItem('air-map-language-v1'),'en');
  assert.ok(d.querySelector('#air-threat-legend').textContent.includes('AIR THREATS'));
+ assert.equal(d.querySelector('#air-threat-legend').style.display,'block');
+ d.querySelector('#air-threat-legend .air-legend-toggle').click();
+ assert.ok(d.querySelector('#air-threat-legend').classList.contains('air-legend-collapsed'));
  assert.equal(d.querySelector('#kharkiv-alert-state').textContent,'ALL CLEAR');
  assert.ok(d.querySelector('#air-visual-settings-panel').textContent.includes('Reset'));
  assert.ok(d.querySelector('.air-disclaimer-body').textContent.includes('During an air raid alert'));
@@ -59,11 +63,15 @@ function wait(ms){return new Promise(r=>setTimeout(r,ms))}
  assert.ok(popup.includes('Sumy Oblast (approximate border reference)'));assert.ok(popup.includes('SOURCE REPORT'));assert.ok(popup.includes('Вилетів в Сумську область⚠️'));
  assert.equal(w.airTest.resolveThreatVisualType(track),'attack_uav_unknown');
  w.setAirLanguage('uk');await wait(100);
+ assert.equal(d.querySelector('#air-threat-legend').style.display,'block');
+ assert.ok(d.querySelector('#air-threat-legend').classList.contains('air-legend-collapsed'));
+ d.querySelector('#air-threat-legend .air-legend-toggle').click();
  popup=w.airTest.buildPopupHtml(thread,track,event,place,'historical');assert.ok(popup.includes('ПОВІДОМЛЕННЯ ДЖЕРЕЛА'));
  assert.ok(popup.includes('наближена прив’язка до кордону'));
  const icon=w.AirAviationSymbol.createIcon(w.L,2);assert.ok(icon.options.html.includes('<span>2</span>'));assert.ok(d.getElementById('air-aviation-symbol-style').textContent.includes('prefers-reduced-motion'));
  // Regional notices are their own layer and never increase active-target counts.
  assert.ok(d.querySelector('.air-region-notice-heading').textContent.endsWith('4'));
+ assert.ok(d.querySelector('.leaflet-bottom.leaflet-left .air-region-notices'));
  assert.equal(d.querySelector('#hud-shown').textContent,'0');
  const regionalMarkers=[...d.querySelectorAll('.air-aviation-icon')];assert.equal(regionalMarkers.length,4);
  assert.ok(regionalMarkers.every(el=>el.getAttribute('title').includes('Регіон повідомлення')));
