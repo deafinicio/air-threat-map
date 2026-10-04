@@ -8642,6 +8642,7 @@ coreLine.addTo(
 
     mode = "air";
     lastPayload = null;
+    if (window.AirRegionAlerts && airDataMode === "live") window.AirRegionAlerts.start(map);
 
     installAirTrackModeButton();
     installAirDataModeButton();
@@ -8713,6 +8714,7 @@ coreLine.addTo(
     if (mode !== "air") return;
 
     mode = "mine";
+    if (window.AirRegionAlerts) window.AirRegionAlerts.stop();
     stopRefreshLoop();
 
     selectedAirTrackId =
@@ -8943,6 +8945,11 @@ coreLine.addTo(
 
 
     updateAirDataModeButton();
+
+    if (window.AirRegionAlerts && mode === "air") {
+      if (airDataMode === "live") window.AirRegionAlerts.start(map);
+      else window.AirRegionAlerts.stop();
+    }
 
 
     if (

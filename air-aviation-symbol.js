@@ -1,4 +1,4 @@
-/* Reusable takeoff-report marker. No feed or coordinates are activated by this module. */
+/* Reusable aviation notice symbol. This component does not locate aircraft. */
 (function(root) {
   "use strict";
   const svg = `<svg viewBox="0 0 64 64" width="44" height="44" aria-hidden="true" focusable="false">

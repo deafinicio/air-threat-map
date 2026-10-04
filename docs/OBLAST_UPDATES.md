@@ -30,14 +30,26 @@ The separate server bundle adds explicit region-departure parsing through a smal
 
 ## Aviation
 
-`air-aviation-symbol.js` provides an aircraft SVG and two red pulsing neon rings, plus a count badge and reduced-motion support. Loading the component does not display an aviation marker. Activating the aviation feed requires reviewed raw takeoff reports, user-supplied regional reference coordinates, and source-based activation/closure rules. Activity reports alone are not treated as confirmed takeoffs.
+`air-region-alerts.js` loads the separate read-only `/api/monitor/region-alerts` feed. Its markers are fixed regional references for civilian public notices, with an aviation symbol and two red pulsing neon rings. They have no flight paths, aircraft counts or object positions and do not contribute to the target HUD. Activity reports and reported takeoffs are labeled separately. The bottom-right panel lists current report regions; selecting a region opens its reference and explanation. The map does not automatically change its view when a notice arrives.
+
+| Region | User-provided approximate reference (lat, lng) |
+|---|---|
+| Nizhny Novgorod | 55.991434, 44.415355 |
+| Murmansk | 68.480743, 33.600495 |
+| Saratov | 51.788829, 46.573604 |
+| Belgorod | 50.643981, 36.589746 |
+
+The backend requires an explicit region in the relevant report clause (or BNR for Belgorod). It performs no airfield lookup or origin inference. Negated, closed, multi-region and transit/launch-area reports do not activate references. Closing a reply chain removes notices in that chain; a newer independent notice is preserved. Reports expire after 30 minutes from their original timestamp; edits do not make old reports current. A disappeared marker is not an official all clear.
+
+The frontend polls independently every 30 seconds, removes expired references even between polls, and distinguishes no recent reports from an unavailable feed. Failed requests remove the regional references. Data from this feed cannot change reference coordinates. Both the panel and popups translate to UA/EN; reduced-motion settings stop the pulse animation. The layer is disabled in DEMO and stops when leaving AIR mode.
 
 ## Validation
 
 Run `npm ci && npm test`.
 
 - 26 boundary checks: all five regions, segment projection, MultiPolygon, invalid/missing data, Cyrillic street/city distinction, reply ancestry, ambiguity and cycles.
-- DOM integration with actual Leaflet: language switching, stored selection, controls, notice, alert state, unchanged source reports, threat class, approximate border popup, straight closing edge, inactive count and aviation symbol.
+- DOM integration with actual Leaflet: language switching, stored selection, controls, notice, alert state, unchanged source reports, threat class, approximate border popup, straight closing edge, inactive count, four regional notices, translated regional popup, coordinate-injection rejection, expired/future reports, feed failures and teardown.
+- 27 separate backend notice checks, including unchanged SQLite bytes and actual examples from the user-provided audit.
 - The separate backend suite passes 90 region cases and the 253, 68, 20 and 14 existing city/ring checks. An isolated processor/SQLite/API integration verifies 13 messages covering the five regions and a Sumy street counterexample.
 
 DOM tests do not verify pixel layout. The local graphical browser could not start in the execution environment. Desktop and mobile appearance still require a browser review before publishing.

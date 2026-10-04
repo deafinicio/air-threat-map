@@ -4,7 +4,7 @@ Standalone web interface for visualizing **source-reported air-threat informatio
 
 **Live map:** https://deafinicio.github.io/air-threat-map/
 
-UA/EN controls and approximate neighboring-oblast border references are described in [OBLAST_UPDATES.md](docs/OBLAST_UPDATES.md). Development checks: `npm ci && npm test`.
+UA/EN controls, approximate neighboring-oblast border references and regional civilian notices are described in [OBLAST_UPDATES.md](docs/OBLAST_UPDATES.md). Development checks: `npm ci && npm test`.
 
 ---
 
