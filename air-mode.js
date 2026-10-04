@@ -1,6 +1,8 @@
 (function () {
   "use strict";
 
+  const airT = key => window.airT ? window.airT(key) : key;
+
   const AIR_STANDALONE =
     document.documentElement.dataset.airStandalone ===
       "true";
@@ -1303,11 +1305,11 @@ function rerenderAirVisuals() {
 
         div.innerHTML = `
           <div class="section-title">
-            Air Visual Params
+            <span data-i18n="Air Visual Params">${airT("Air Visual Params")}</span>
           </div>
 
           <label class="small-label">
-            Icon glow
+            <span data-i18n="Icon glow">${airT("Icon glow")}</span>
             <span id="air-icon-glow-value"></span>
           </label>
 
@@ -1321,7 +1323,7 @@ function rerenderAirVisuals() {
 
 
           <label class="small-label">
-            Glow radius
+            <span data-i18n="Glow radius">${airT("Glow radius")}</span>
             <span id="air-glow-radius-value"></span>
           </label>
 
@@ -1335,7 +1337,7 @@ function rerenderAirVisuals() {
 
 
           <label class="small-label">
-            Pulse
+            <span data-i18n="Pulse">${airT("Pulse")}</span>
             <span id="air-pulse-value"></span>
           </label>
 
@@ -1349,7 +1351,7 @@ function rerenderAirVisuals() {
 
 
           <label class="small-label">
-            Track glow
+            <span data-i18n="Track glow">${airT("Track glow")}</span>
             <span id="air-track-glow-value"></span>
           </label>
 
@@ -1363,7 +1365,7 @@ function rerenderAirVisuals() {
 
 
           <label class="small-label">
-            Track width
+            <span data-i18n="Track width">${airT("Track width")}</span>
             <span id="air-track-width-value"></span>
           </label>
 
@@ -1377,7 +1379,7 @@ function rerenderAirVisuals() {
 
 
           <label class="small-label">
-            Kharkiv boundary
+            <span data-i18n="Kharkiv boundary">${airT("Kharkiv boundary")}</span>
             <span id="air-ring-road-intensity-value"></span>
           </label>
 
@@ -1390,7 +1392,7 @@ function rerenderAirVisuals() {
           >
 
           <button id="reset-air-visual-settings">
-            Скинути
+            <span data-i18n="Скинути">${airT("\u0421\u043a\u0438\u043d\u0443\u0442\u0438")}</span>
           </button>
         `;
 
@@ -1615,7 +1617,7 @@ function rerenderAirVisuals() {
     const date = new Date(value);
     if (Number.isNaN(date.getTime())) return escapeHtml(value);
 
-    return date.toLocaleString("uk-UA", {
+    return date.toLocaleString(window.airLocale ? window.airLocale() : "uk-UA", {
       day: "2-digit",
       month: "2-digit",
       hour: "2-digit",
@@ -1625,26 +1627,19 @@ function rerenderAirVisuals() {
   }
 
   function threatLabel(track) {
-    if (!track || typeof track !== "object") return "Повітряна загроза";
+    if (!track || typeof track !== "object") return airT("Повітряна загроза");
 
     const threat = track.threat;
 
     if (typeof threat === "string" && threat) {
-      return threat;
+      return airT(threat);
     }
 
     if (threat && typeof threat === "object") {
-      return threat.canonical_name ||
-        threat.name ||
-        threat.label ||
-        threat.id ||
-        "Повітряна загроза";
+      return airT(threat.canonical_name || threat.name || threat.label || threat.id || "Повітряна загроза");
     }
 
-    return track.threat_name ||
-      track.threat_id ||
-      track.classification ||
-      "Повітряна загроза";
+    return airT(track.threat_name || track.threat_id || track.classification || "Повітряна загроза");
   }
 
   // =========================================================
@@ -2205,16 +2200,16 @@ function rerenderAirVisuals() {
   function terminalTypeLabel(type) {
     switch (type) {
       case "fallen_reported":
-        return "SOURCE REPORTED FALL / IMPACT";
+        return airT("SOURCE REPORTED FALL / IMPACT");
 
       case "intercepted_reported":
-        return "SOURCE REPORTED INTERCEPTION";
+        return airT("SOURCE REPORTED INTERCEPTION");
 
       case "lost_tracking":
-        return "SOURCE REPORTED LOSS OF TRACKING";
+        return airT("SOURCE REPORTED LOSS OF TRACKING");
 
       default:
-        return "SOURCE TERMINAL STATUS";
+        return airT("SOURCE TERMINAL STATUS");
     }
   }
 
@@ -2767,7 +2762,7 @@ function rerenderAirVisuals() {
       escapeHtml(
         threatSpecified
           ? threatName
-          : "Тип цілі: не визначений джерелом"
+          : airT("Тип цілі: не визначений джерелом")
       ) +
       "</b><br>" +
 
@@ -2782,7 +2777,7 @@ function rerenderAirVisuals() {
 
       "</span><br>" +
 
-      "Остання підтверджена джерелом позиція: " +
+      airT("Остання підтверджена джерелом позиція: ") +
 
       escapeHtml(
         place.canonical_name ||
@@ -2792,7 +2787,7 @@ function rerenderAirVisuals() {
 
       "<br>" +
 
-      "Час terminal-повідомлення: " +
+      airT("Час terminal-повідомлення: ") +
 
       formatDate(
         terminal &&
@@ -2807,7 +2802,7 @@ function rerenderAirVisuals() {
     ) {
       html +=
         '<br><span style="color:var(--text-dim)">' +
-        "Статус: попереднє повідомлення джерела" +
+        airT("Статус: попереднє повідомлення джерела") +
         "</span>";
     }
 
@@ -2819,7 +2814,7 @@ function rerenderAirVisuals() {
       ) > 1
     ) {
       html +=
-        "<br>Кількість: " +
+        airT("<br>Кількість: ") +
         escapeHtml(
           terminal.count
         );
@@ -2831,7 +2826,7 @@ function rerenderAirVisuals() {
       track.track_id
     ) {
       html +=
-        "<br>Track: " +
+        airT("<br>Track: ") +
         escapeHtml(
           track.track_id
         );
@@ -2843,7 +2838,7 @@ function rerenderAirVisuals() {
       thread.root_message_id
     ) {
       html +=
-        "<br>Thread: " +
+        airT("<br>Thread: ") +
         escapeHtml(
           thread.root_message_id
         );
@@ -2855,7 +2850,7 @@ function rerenderAirVisuals() {
       terminal.message_id
     ) {
       html +=
-        "<br>Message: " +
+        airT("<br>Message: ") +
         escapeHtml(
           terminal.message_id
         );
@@ -2865,7 +2860,7 @@ function rerenderAirVisuals() {
     if (report) {
       html +=
         '<br><br><span style="color:var(--text-dim)">' +
-        "SOURCE REPORT" +
+        airT("SOURCE REPORT") +
         "</span><br>" +
 
         escapeHtml(
@@ -2879,8 +2874,8 @@ function rerenderAirVisuals() {
 
     html +=
       '<br><br><span style="color:var(--text-dim)">' +
-      "Маркер показує останню однозначну позицію, повідомлену джерелом до terminal-статусу. " +
-      "Це не точна координата падіння або перехоплення." +
+      airT("Маркер показує останню однозначну позицію, повідомлену джерелом до terminal-статусу. ") +
+      airT("Це не точна координата падіння або перехоплення.") +
       "</span>";
 
 
@@ -3798,7 +3793,7 @@ function updateThreatMarkerScale() {
               ${legendThreatSvg(item.type)}
 
               <div class="air-legend-label">
-                ${escapeHtml(item.label)}
+                ${escapeHtml(airT(item.label))}
               </div>
             </div>
           `;
@@ -3807,12 +3802,12 @@ function updateThreatMarkerScale() {
 
     legend.innerHTML = `
       <div class="air-legend-header">
-        <span>AIR THREATS</span>
+        <span>${airT("AIR THREATS")}</span>
 
         <button
           type="button"
           class="air-legend-toggle"
-          title="Згорнути легенду"
+          title="${airT("Згорнути легенду")}"
         >
           −
         </button>
@@ -3825,17 +3820,17 @@ function updateThreatMarkerScale() {
 
         <div class="air-legend-status-row">
           <div class="air-legend-current"></div>
-          <span>CURRENT POSITION</span>
+          <span>${airT("CURRENT POSITION")}</span>
         </div>
 
         <div class="air-legend-status-row">
           <div class="air-legend-history"></div>
-          <span>HISTORICAL POSITION</span>
+          <span>${airT("HISTORICAL POSITION")}</span>
         </div>
 
         <div class="air-legend-status-row">
           <div class="air-legend-track"></div>
-          <span>REPORTED TRACK</span>
+          <span>${airT("REPORTED TRACK")}</span>
         </div>
 
 
@@ -3850,7 +3845,7 @@ function updateThreatMarkerScale() {
             "
           >?</div>
 
-          <span>LOST TRACKING</span>
+          <span>${airT("LOST TRACKING")}</span>
         </div>
 
 
@@ -3862,7 +3857,7 @@ function updateThreatMarkerScale() {
             "
           >×</div>
 
-          <span>INTERCEPTED</span>
+          <span>${airT("INTERCEPTED")}</span>
         </div>
 
 
@@ -3874,7 +3869,7 @@ function updateThreatMarkerScale() {
             "
           >✦</div>
 
-          <span>FALLEN / IMPACT</span>
+          <span>${airT("FALLEN / IMPACT")}</span>
         </div>
 
       </div>
@@ -3901,8 +3896,8 @@ function updateThreatMarkerScale() {
 
         toggle.title =
           collapsed
-            ? "Розгорнути легенду"
-            : "Згорнути легенду";
+            ? airT("Розгорнути легенду")
+            : airT("Згорнути легенду");
       }
     );
 
@@ -4320,9 +4315,9 @@ function updateThreatMarkerScale() {
     }
 
     const labels = {
-      selected: "SEL",
-      all: "ALL",
-      off: "OFF"
+      selected: airT("SEL"),
+      all: airT("ALL"),
+      off: airT("OFF")
     };
 
     const label =
@@ -4334,12 +4329,12 @@ function updateThreatMarkerScale() {
       label;
 
     button.title =
-      "Треки: " +
+      airT("Треки: ") +
       label +
       (
         airTrackDisplayMode ===
           "selected"
-          ? " — клікни по цілі"
+          ? airT(" — клікни по цілі")
           : ""
       );
 
@@ -5239,6 +5234,7 @@ function updateThreatMarkerScale() {
       "";
   }
   function buildPopupHtml(thread, track, event, place, kind) {
+    const borderName = window.AirRegionBorders && window.AirRegionBorders.displayName(place);
     const rootId =
       thread && thread.root_message_id;
 
@@ -5282,11 +5278,11 @@ function updateThreatMarkerScale() {
 
     const semanticLabel =
       isDirectionTarget
-        ? "SOURCE-REPORTED DIRECTION TARGET"
+        ? airT("SOURCE-REPORTED DIRECTION TARGET")
         : (
             isCurrent
-              ? "CURRENT REPORTED POSITION"
-              : "REPORTED POSITION"
+              ? airT("CURRENT REPORTED POSITION")
+              : airT("REPORTED POSITION")
           );
 
     const semanticColor =
@@ -5307,9 +5303,9 @@ function updateThreatMarkerScale() {
       '">' +
       semanticLabel +
       "</span><br>" +
-      "Місце: " +
+      airT("Місце: ") +
       escapeHtml(
-        place.canonical_name ||
+        borderName || place.canonical_name ||
         place.raw_name ||
         place.id ||
         "—"
@@ -5321,7 +5317,7 @@ function updateThreatMarkerScale() {
       sourceGroupCount > 0
     ) {
       html +=
-        "Об'єктів у цій групі: " +
+        airT("Об'єктів у цій групі: ") +
         escapeHtml(sourceGroupCount) +
         "<br>";
     }
@@ -5343,72 +5339,76 @@ function updateThreatMarkerScale() {
 
       html +=
         '<span style="color:var(--amber)">' +
-        'DERIVED SOURCE REFERENCE' +
+        airT("DERIVED SOURCE REFERENCE") +
         '</span><br>' +
 
-        "Орієнтири джерела: " +
+        airT("Орієнтири джерела: ") +
         escapeHtml(anchorNames) +
         "<br>" +
 
         (
           monitorAnchorKind === "midpoint"
-            ? "Візуальна точка розміщена посередині між двома вказаними географічними орієнтирами."
-            : "Візуальна точка розміщена в центроїді вказаних географічних орієнтирів."
+            ? airT("Візуальна точка розміщена посередині між двома вказаними географічними орієнтирами.")
+            : airT("Візуальна точка розміщена в центроїді вказаних географічних орієнтирів.")
         ) +
         "<br><br>";
     }
 
 
     html +=
-      "Час повідомлення: " +
+      airT("Час повідомлення: ") +
       formatDate(event.telegram_date) +
       "<br>" +
-      "Статус треку: " +
+      airT("Статус треку: ") +
       escapeHtml(
         track.active === true
-          ? "ACTIVE"
-          : "INACTIVE"
+          ? airT("ACTIVE")
+          : airT("INACTIVE")
       );
 
     if (trackId) {
       html +=
-        "<br>Track: " +
+        airT("<br>Track: ") +
         escapeHtml(trackId);
     }
 
     if (rootId) {
       html +=
-        "<br>Thread: " +
+        airT("<br>Thread: ") +
         escapeHtml(rootId);
     }
 
     if (event.message_id) {
       html +=
-        "<br>Message: " +
+        airT("<br>Message: ") +
         escapeHtml(event.message_id);
+    }
+
+    if (place.region_border_projection) {
+      html += "<br><br>" + escapeHtml(airT("Reference is the nearest border point, not a confirmed crossing."));
     }
 
     if (report) {
       html +=
-        '<br><br><span style="color:var(--text-dim)">SOURCE REPORT</span><br>' +
+        '<br><br><span style="color:var(--text-dim)">' + airT("SOURCE REPORT") + '</span><br>' +
         escapeHtml(report).replace(/\n/g, "<br>");
     }
 
     if (isDirectionTarget) {
       html +=
         '<br><br><span style="color:var(--text-dim)">' +
-        'Це напрямок або географічний орієнтир, прямо вказаний джерелом. ' +
-        'Маркер не означає підтверджену поточну координату об\'єкта.' +
+        airT("Це напрямок або географічний орієнтир, прямо вказаний джерелом. ") +
+        airT("Маркер не означає підтверджену поточну координату об'єкта.") +
         '</span>';
     } else if (isCurrent) {
       html +=
         '<br><br><span style="color:var(--text-dim)">' +
-        'Великий пульсуючий маркер — остання однозначно геоприв\'язана reported position цього активного треку.' +
+        airT("Великий пульсуючий маркер — остання однозначно геоприв'язана reported position цього активного треку.") +
         '</span>';
     } else {
       html +=
         '<br><br><span style="color:var(--text-dim)">' +
-        'Мала точка — історична reported position. Вона не є прогнозом поточного місцеположення.' +
+        airT("Мала точка — історична reported position. Вона не є прогнозом поточного місцеположення.") +
         '</span>';
     }
 
@@ -5763,7 +5763,8 @@ function updateThreatMarkerScale() {
     fromLatLng,
     toLatLng,
     lineKey,
-    seenEdges
+    seenEdges,
+    straight = false
   ) {
     if (
       !fromLatLng ||
@@ -5779,7 +5780,7 @@ function updateThreatMarkerScale() {
 
     seenEdges.add(lineKey);
 
-    const points =
+    const points = straight ? [fromLatLng, toLatLng] :
       buildSmoothCurvePoints(
         fromLatLng,
         toLatLng
@@ -6019,6 +6020,15 @@ coreLine.addTo(
       });
 
 
+      if (isMonitorTrack) {
+        events.forEach(function(event) {
+          (event.places || []).filter(function(place) { return place.region_border_projection; }).forEach(function(place) {
+            drawSmoothTrackCurve(place.region_border_from_latlng, geometryToLatLng(place),
+              ["border-reference", track.track_id, place.region_border_from_message_id, event.message_id, place.region_border_id].join("|"), seenEdges, true);
+          });
+        });
+      }
+
       // -----------------------------------------------------
       // B. CONNECT EXPLICIT TELEGRAM REPLIES
       // -----------------------------------------------------
@@ -6107,6 +6117,7 @@ coreLine.addTo(
 
               childInfo.places.forEach(
                 function(to) {
+                  if (to.place.region_border_projection) return;
 
                   const lineKey = [
                     "monitor-reply-alternative",
@@ -6847,6 +6858,19 @@ coreLine.addTo(
       );
 
 
+    // An explicit departure closes a live track, but its final border segment
+    // remains visible as history for the same 30-minute window as closing markers.
+    const borderExitRows = trackRows.filter(function(row) {
+      if (!row.track || row.track.status !== "left_region") return false;
+      return (row.track.segments || []).some(function(segment) {
+        return (segment.events || []).some(function(event) {
+          const age = Date.now() - new Date(event.telegram_date).getTime();
+          return age >= 0 && age <= AIR_TERMINAL_FADE_MS &&
+            (event.places || []).some(function(place) { return place.region_border_projection; });
+        });
+      });
+    });
+
     const terminalRows =
       trackRows.filter(
         function(row) {
@@ -6908,7 +6932,7 @@ coreLine.addTo(
 
       activeRows
         .concat(
-          terminalRows
+          terminalRows, borderExitRows
         )
         .forEach(
           function(row) {
@@ -7831,7 +7855,7 @@ coreLine.addTo(
       "air-disclaimer-kicker";
 
     kicker.textContent =
-      "AIR THREAT // INFORMATION SYSTEM";
+      airT("AIR THREAT // INFORMATION SYSTEM");
 
     const title =
       document.createElement(
@@ -7845,7 +7869,7 @@ coreLine.addTo(
       "air-disclaimer-title";
 
     title.textContent =
-      AIR_DISCLAIMER_TITLE;
+      airT(AIR_DISCLAIMER_TITLE);
 
     const body =
       document.createElement(
@@ -7863,7 +7887,7 @@ coreLine.addTo(
           );
 
         paragraph.textContent =
-          line;
+          airT(line);
 
         body.appendChild(
           paragraph
@@ -7891,7 +7915,7 @@ coreLine.addTo(
       "air-disclaimer-ok";
 
     button.textContent =
-      "OK";
+      airT("OK");
 
     button.addEventListener(
       "click",
@@ -8033,33 +8057,33 @@ coreLine.addTo(
 
 
   function renderAirHud(stats) {
-    setText("#top-bar .brand", "AIR THREAT // TRACK SYS");
-    setHudStat("hud-total", stats.loadedTracks, "tracks loaded");
-    setHudStat("hud-shown", stats.activeTracks, "active tracks");
+    setText("#top-bar .brand", airT("AIR THREAT // TRACK SYS"));
+    setHudStat("hud-total", stats.loadedTracks, airT("tracks loaded"));
+    setHudStat("hud-shown", stats.activeTracks, airT("active tracks"));
     setHudStat(
       "hud-participants",
       stats.markers,
-      "mapped positions"
+      airT("mapped positions")
     );
 
     const live = $("hud-live");
     if (live) {
       live.textContent =
         airDataMode === "demo"
-          ? "● DEMO FEED"
-          : "● AIR FEED";
+          ? airT("● DEMO FEED")
+          : airT("● AIR FEED");
       live.style.color = "var(--amber)";
       live.title =
         stats.historicalMarkers +
-        " reported historical positions; " +
+        " " + airT("reported historical positions") + "; " +
 
         stats.terminalMarkers +
-        " recent terminal markers; " +
+        " " + airT("recent terminal markers") + "; " +
 
         stats.staleActiveTracks +
-        " backend-active tracks hidden by 30 min LIVE TTL; " +
+        " " + airT("backend-active tracks hidden by 30 min LIVE TTL") + "; " +
 
-        "TRK mode: " +
+        airT("TRK mode: ") +
         airTrackDisplayMode.toUpperCase();
     }
   }
@@ -8337,8 +8361,8 @@ coreLine.addTo(
     if (live) {
       live.textContent =
         airDataMode === "demo"
-          ? "● DEMO LOADING"
-          : "● AIR SYNCING";
+          ? airT("● DEMO LOADING")
+          : airT("● AIR SYNCING");
       live.style.color = "var(--amber)";
     }
 
@@ -8369,6 +8393,7 @@ coreLine.addTo(
         resolveMonitorLinearReferences(
           payload
         );
+        if (window.AirRegionBorders) window.AirRegionBorders.resolve(payload);
 
         applyMonitorTerminalAnchorOverrides(
           payload
@@ -8429,6 +8454,7 @@ coreLine.addTo(
             resolveMonitorLinearReferences(
               debugPayload
             );
+        if (window.AirRegionBorders) window.AirRegionBorders.resolve(debugPayload);
 
 
             applyMonitorTerminalAnchorOverrides(
@@ -8573,15 +8599,15 @@ coreLine.addTo(
       if (errorLive) {
         errorLive.textContent =
           airDataMode === "demo"
-            ? "● DEMO FILE ERROR"
-            : "● AIR FEED ERROR";
+            ? airT("● DEMO FILE ERROR")
+            : airT("● AIR FEED ERROR");
         errorLive.style.color = "var(--red)";
       }
 
       if (!lastPayload) {
-        setHudStat("hud-total", "ERR", "tracks loaded");
-        setHudStat("hud-shown", "—", "active tracks");
-        setHudStat("hud-participants", "—", "mapped positions");
+        setHudStat("hud-total", "ERR", airT("tracks loaded"));
+        setHudStat("hud-shown", "—", airT("active tracks"));
+        setHudStat("hud-participants", "—", airT("mapped positions"));
       }
     } finally {
       activeRequest = null;
@@ -8616,6 +8642,7 @@ coreLine.addTo(
 
     mode = "air";
     lastPayload = null;
+    if (window.AirRegionAlerts && airDataMode === "live") window.AirRegionAlerts.start(map);
 
     installAirTrackModeButton();
     installAirDataModeButton();
@@ -8644,7 +8671,7 @@ coreLine.addTo(
     addAirLayerToMap();
     showAirLegend();
 
-    await ensureAirRingRoadLoaded();
+    await Promise.all([ensureAirRingRoadLoaded(), window.AirRegionBorders ? window.AirRegionBorders.load() : Promise.resolve(false)]);
 
     ensureAirVisualSettingsPanel();
     setAirVisualPanelVisible(false);
@@ -8656,21 +8683,21 @@ coreLine.addTo(
 
     if (settingsButton) {
       settingsButton.title =
-        "Налаштування AIR-візуалізації";
+        airT("Налаштування AIR-візуалізації");
     }
 
     const button = $("toggle-air-mode");
     if (button) {
       button.textContent = "MINE";
-      button.title = "Повернутися до карти мінної небезпеки";
+      button.title = airT("Повернутися до карти мінної небезпеки");
       button.style.background = "var(--cyan-soft)";
       button.style.color = "var(--amber)";
     }
 
-    setText("#top-bar .brand", "AIR THREAT // TRACK SYS");
-    setHudStat("hud-total", "…", "tracks loaded");
-    setHudStat("hud-shown", "…", "active tracks");
-    setHudStat("hud-participants", "…", "mapped positions");
+    setText("#top-bar .brand", airT("AIR THREAT // TRACK SYS"));
+    setHudStat("hud-total", "…", airT("tracks loaded"));
+    setHudStat("hud-shown", "…", airT("active tracks"));
+    setHudStat("hud-participants", "…", airT("mapped positions"));
 
     await loadAirTracks();
 
@@ -8687,6 +8714,7 @@ coreLine.addTo(
     if (mode !== "air") return;
 
     mode = "mine";
+    if (window.AirRegionAlerts) window.AirRegionAlerts.stop();
     stopRefreshLoop();
 
     selectedAirTrackId =
@@ -8741,13 +8769,13 @@ coreLine.addTo(
 
     if (settingsButton) {
       settingsButton.title =
-        "Налаштування heatmap";
+        airT("Налаштування heatmap");
     }
 
     const button = $("toggle-air-mode");
     if (button) {
       button.textContent = "AIR";
-      button.title = "Перемкнутися на спостереження за повітряними загрозами";
+      button.title = airT("Перемкнутися на спостереження за повітряними загрозами");
       button.style.background = "";
       button.style.color = "";
     }
@@ -8807,7 +8835,7 @@ coreLine.addTo(
       "SEL";
 
     button.title =
-      "Треки: SEL — клікни по цілі";
+      airT("Треки: SEL — клікни по цілі");
 
     button.style.display =
       mode === "air"
@@ -8853,7 +8881,7 @@ coreLine.addTo(
         "DEMO";
 
       button.title =
-        "Демо-дані активні. Натисни, щоб перейти на LIVE.";
+        airT("Демо-дані активні. Натисни, щоб перейти на LIVE.");
 
       button.style.color =
         "#ffd84d";
@@ -8870,7 +8898,7 @@ coreLine.addTo(
         "LIVE";
 
       button.title =
-        "Живі дані з сервера. Натисни, щоб перейти на DEMO.";
+        airT("Живі дані з сервера. Натисни, щоб перейти на DEMO.");
 
       button.style.color =
         "#57f287";
@@ -8917,6 +8945,11 @@ coreLine.addTo(
 
 
     updateAirDataModeButton();
+
+    if (window.AirRegionAlerts && mode === "air") {
+      if (airDataMode === "live") window.AirRegionAlerts.start(map);
+      else window.AirRegionAlerts.stop();
+    }
 
 
     if (
@@ -9005,7 +9038,7 @@ coreLine.addTo(
     button.id = "toggle-air-mode";
     button.type = "button";
     button.textContent = "AIR";
-    button.title = "Перемкнутися на спостереження за повітряними загрозами";
+    button.title = airT("Перемкнутися на спостереження за повітряними загрозами");
 
     button.addEventListener("click", function (event) {
       event.preventDefault();
@@ -9015,6 +9048,35 @@ coreLine.addTo(
 
     iconControl.appendChild(button);
   }
+
+  window.addEventListener("airlanguagechange", function() {
+    const legend = $("air-threat-legend");
+    const collapsed = legend && legend.classList.contains("air-legend-collapsed");
+    if (legend) legend.remove();
+    buildAirLegend();
+    if (collapsed) {
+      const toggle = document.querySelector("#air-threat-legend .air-legend-toggle");
+      if (toggle) toggle.click();
+    }
+    const title = $("air-disclaimer-title");
+    if (title) title.textContent = airT(AIR_DISCLAIMER_TITLE);
+    document.querySelectorAll(".air-disclaimer-body p").forEach(function(p, index) {
+      p.textContent = airT(AIR_DISCLAIMER_LINES[index]);
+    });
+    const ok = document.querySelector(".air-disclaimer-ok");
+    if (ok) ok.textContent = airT("OK");
+    const kicker = document.querySelector(".air-disclaimer-kicker");
+    if (kicker) kicker.textContent = airT("AIR THREAT // INFORMATION SYSTEM");
+    updateAirTrackModeButton();
+    updateAirDataModeButton();
+    const settings = $("toggle-heat-settings");
+    if (settings) settings.title = airT("Налаштування AIR-візуалізації");
+    if (lastPayload && mode === "air") {
+      reopenSelectedPopup = true;
+      rerenderAirVisuals();
+    }
+    if (window.applyAirTranslations) window.applyAirTranslations();
+  });
 
   function init() {
     installThreatIconStyles();

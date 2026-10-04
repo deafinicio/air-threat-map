@@ -11,6 +11,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="./air-i18n.js"></script>
   <title>AIR Threat Map — Kharkiv Region</title>
 
   <meta
@@ -687,6 +688,15 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         display: none;
       }
     }
+
+    .air-language-switch { display:flex; gap:5px; flex:none; }
+    .air-language-switch button { font:11px var(--font-mono); letter-spacing:1px; color:var(--text-dim); background:#06151d; border:1px solid var(--line); border-radius:3px; min-width:32px; min-height:28px; padding:4px 7px; cursor:pointer; }
+    .air-language-switch button[aria-pressed="true"] { color:var(--cyan); border-color:var(--cyan); background:rgba(53,230,255,.08); box-shadow:0 0 9px rgba(53,230,255,.15); }
+    .air-language-switch button:hover { color:var(--text); }
+    .air-language-switch button:focus-visible { outline:2px solid var(--cyan); outline-offset:2px; }
+    @media(max-width:1100px) { #top-bar { gap:12px; } #top-bar .brand { font-size:11px; letter-spacing:1px; } .hud-stat span { letter-spacing:.5px; } }
+    @media(max-width:820px) { #top-bar .hud-stat:has(#hud-clock), #top-bar .hud-stat:has(#hud-date) { display:none; } }
+    @media(max-width:620px) { #map { top:76px; } #top-bar { flex-wrap:wrap; height:76px; padding:7px 8px; column-gap:8px; row-gap:7px; } #top-bar .brand { flex:1 0 calc(100% - 95px); order:0; } .air-language-switch { order:1; } #top-bar .hud-stat { order:2; flex:1; min-width:0; } #top-bar .hud-stat span { font-size:8px; letter-spacing:0; } #top-bar .status-tag { order:3; font-size:8px; letter-spacing:.5px; } #top-bar .spacer { display:none; } }
   </style>
 </head>
 
@@ -699,44 +709,48 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div id="hud-bg"></div>
 
   <div id="top-bar">
-    <div class="brand">AIR THREAT // TRACK SYS</div>
+    <div class="brand" data-i18n="AIR THREAT // TRACK SYS">AIR THREAT // TRACK SYS</div>
     <div class="hud-sep"></div>
 
     <div class="hud-stat">
       <b id="hud-clock">--:--:--</b>
-      <span>local time</span>
+      <span data-i18n="local time">local time</span>
     </div>
 
     <div class="hud-sep"></div>
 
     <div class="hud-stat">
       <b id="hud-date">----</b>
-      <span>date</span>
+      <span data-i18n="date">date</span>
     </div>
 
     <div class="hud-sep"></div>
 
     <div class="hud-stat">
       <b id="hud-total">…</b>
-      <span>tracks loaded</span>
+      <span data-i18n="tracks loaded">tracks loaded</span>
     </div>
 
     <div class="hud-sep"></div>
 
     <div class="hud-stat">
       <b id="hud-shown">…</b>
-      <span>active tracks</span>
+      <span data-i18n="active tracks">active tracks</span>
     </div>
 
     <div class="hud-sep"></div>
 
     <div class="hud-stat">
       <b id="hud-participants">…</b>
-      <span>mapped positions</span>
+      <span data-i18n="mapped positions">mapped positions</span>
     </div>
 
     <div class="spacer"></div>
 
+    <div class="air-language-switch" role="group" aria-label="Українська / English">
+      <button type="button" data-air-language="uk" aria-pressed="true" lang="uk">UA</button>
+      <button type="button" data-air-language="en" aria-pressed="false" lang="en">EN</button>
+    </div>
     <div class="status-tag" id="hud-live">
       ● AIR SYNCING
     </div>
@@ -748,7 +762,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <button
       id="toggle-heat-settings"
       type="button"
-      title="Налаштування AIR-візуалізації"
+      title="Налаштування AIR-візуалізації" data-i18n-title="Налаштування AIR-візуалізації"
     >
       VIS
     </button>
@@ -768,13 +782,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
 
   <div id="kharkiv-alert" data-status="NO_DATA" aria-live="polite">
-    <div class="alarm-kicker">KHARKIV CITY / COMMUNITY</div>
+    <div class="alarm-kicker" data-i18n="KHARKIV CITY / COMMUNITY">KHARKIV CITY / COMMUNITY</div>
     <div class="alarm-state">
       <span class="alarm-dot"></span>
       <span id="kharkiv-alert-state">NO DATA</span>
     </div>
     <div class="alarm-meta">
-      <span id="kharkiv-alert-updated">waiting for status</span>
+      <span id="kharkiv-alert-updated" data-i18n="waiting for status">waiting for status</span>
     </div>
   </div>
 
@@ -796,14 +810,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       if (clock) {
         clock.textContent =
           now.toLocaleTimeString(
-            "uk-UA",
+            window.airLocale(),
             { hour12: false }
           );
       }
 
       if (date) {
         date.textContent =
-          now.toLocaleDateString("uk-UA");
+          now.toLocaleDateString(window.airLocale());
       }
     }
 
@@ -928,10 +942,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
      * Leaflet automatically places it below the zoom control,
      * so it no longer overlaps the AIR VIS / ALL / LIVE buttons.
      */
-    L.control.layers(
+    var baseMapControl = L.control.layers(
       {
         "Dark Ops — Esri": dark,
-        "Esri Topographic": topo,
+        [window.airT("Esri Topographic")]: topo,
         "OpenStreetMap": osm
       },
       null,
@@ -1113,12 +1127,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     let kharkivAlarmTimer = null;
 
     function formatAlarmCheckTime(value) {
-      if (!value) return "updated —";
+      if (!value) return window.airT("updated —");
       const date = new Date(value);
-      if (Number.isNaN(date.getTime())) return "updated —";
+      if (Number.isNaN(date.getTime())) return window.airT("updated —");
 
-      return "updated " + date.toLocaleTimeString(
-        "uk-UA",
+      return window.airT("updated ") + date.toLocaleTimeString(
+        window.airLocale(),
         {
           hour: "2-digit",
           minute: "2-digit",
@@ -1127,7 +1141,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       );
     }
 
+    let lastAlarmPayload = null;
     function renderKharkivAlarm(payload) {
+      lastAlarmPayload = payload;
       const panel = document.getElementById("kharkiv-alert");
       const state = document.getElementById("kharkiv-alert-state");
       const updated = document.getElementById("kharkiv-alert-updated");
@@ -1145,13 +1161,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       state.textContent =
         status === "AIR_ALERT"
-          ? "AIR ALERT"
+          ? window.airT("AIR ALERT")
           : status === "CLEAR"
-            ? "CLEAR"
-            : "NO DATA";
+            ? window.airT("CLEAR")
+            : window.airT("NO DATA");
 
       updated.textContent =
         formatAlarmCheckTime(payload && payload.checked_at);
+      updated.removeAttribute("data-i18n");
     }
 
     async function loadKharkivAlarm() {
@@ -1196,6 +1213,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       );
     }
 
+    window.addEventListener("airlanguagechange", function() {
+      tickClock();
+      if (lastAlarmPayload) renderKharkivAlarm(lastAlarmPayload);
+      baseMapControl.removeLayer(dark); baseMapControl.removeLayer(topo);
+      baseMapControl.addBaseLayer(dark, window.airT("Dark Ops — Esri"));
+      baseMapControl.addBaseLayer(topo, window.airT("Esri Topographic"));
+      document.querySelectorAll(".leaflet-control-zoom-in, .leaflet-control-zoom-out").forEach(function(el) {
+        const label = window.airLanguage() === "uk" ? (el.classList.contains("leaflet-control-zoom-in") ? "Збільшити" : "Зменшити") : (el.classList.contains("leaflet-control-zoom-in") ? "Zoom in" : "Zoom out");
+        el.title = label; el.setAttribute("aria-label", label);
+      });
+    });
     startKharkivAlarmPolling();
 
     /*
@@ -1209,6 +1237,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       L.layerGroup();
   </script>
 
+  <script src="./air-region-borders.js"></script>
+  <script src="./air-aviation-symbol.js"></script>
+  <script src="./air-region-alerts.js"></script>
   <script src="./air-mode.js"></script>
 </body>
 </html>
