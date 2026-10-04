@@ -108,8 +108,8 @@
     if (enabled) return;
     map=nextMap;enabled=true;generation++;reports=[];status="loading";styles();
     layer=root.L.layerGroup().addTo(map);
-    control=root.L.control({position:"bottomright"});
-    control.onAdd=function(){panel=document.createElement("div");panel.className="air-region-notices";root.L.DomEvent.disableClickPropagation(panel);root.L.DomEvent.disableScrollPropagation(panel);return panel;};
+    control=root.L.control({position:"bottomleft"});
+    control.onAdd=function(){panel=document.createElement("div");panel.className="air-region-notices";panel.style.marginBottom="152px";root.L.DomEvent.disableClickPropagation(panel);root.L.DomEvent.disableScrollPropagation(panel);return panel;};
     control.addTo(map);render();refresh();
     timer=setInterval(refresh,30000);
     expiryTimer=setInterval(()=>{

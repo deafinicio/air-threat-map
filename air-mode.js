@@ -9051,9 +9051,11 @@ coreLine.addTo(
 
   window.addEventListener("airlanguagechange", function() {
     const legend = $("air-threat-legend");
+    const visible = legend && legend.style.display === "block";
     const collapsed = legend && legend.classList.contains("air-legend-collapsed");
     if (legend) legend.remove();
     buildAirLegend();
+    if (visible) showAirLegend();
     if (collapsed) {
       const toggle = document.querySelector("#air-threat-legend .air-legend-toggle");
       if (toggle) toggle.click();
