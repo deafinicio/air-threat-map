@@ -2,7 +2,7 @@
   "private": true,
   "name": "air-threat-map",
   "scripts": {
-    "test": "node tests/test_borders.cjs && node tests/test_dom.cjs"
+    "test": "node tests/test_borders.cjs && node tests/test_dom.cjs && node --test tests/test_pwa.cjs"
   },
   "devDependencies": {
     "jsdom": "26.1.0",

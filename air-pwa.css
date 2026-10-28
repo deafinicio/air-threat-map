@@ -1,0 +1,54 @@
+/* Keep the existing browser safe-area inset on iPhone; do not draw below its notch. */
+@supports (height: 100dvh) {
+  html, body { height: 100dvh; }
+}
+@media (max-width: 620px) {
+  .icon-control { top: 96px; }
+}
+.icon-control #air-install-open { display: flex; align-items: center; justify-content: center; gap: 4px; }
+.icon-control #air-install-open[hidden] { display: none; }
+#air-install-open svg { width: 15px; height: 15px; }
+#air-install-open:focus-visible { outline: 2px solid var(--cyan); outline-offset: -3px; }
+.air-install-dialog {
+  width: min(440px, calc(100% - 28px));
+  max-height: calc(100vh - 32px);
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  margin: auto;
+  padding: 24px;
+  border: 1px solid #1c7f96;
+  border-radius: 6px;
+  background: #06131a;
+  color: #d6f6ff;
+  font: 14px/1.6 var(--font-mono, monospace);
+  box-shadow: 0 0 35px #35e6ff22;
+}
+.air-install-dialog::backdrop { background: #010509c9; }
+.air-install-dialog:not([open]) { display: none; }
+.air-install-dialog.air-install-fallback[open] { position: fixed; inset: 0; z-index: 100010; }
+.air-install-dialog header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.air-install-dialog header img { width: 44px; height: 44px; border-radius: 8px; }
+.air-install-dialog h2 { flex: 1; margin: 0; font-size: 17px; line-height: 1.4; color: #35e6ff; }
+.air-install-dialog button {
+  min-height: 44px; padding: 8px 12px;
+  border: 1px solid #1c7f96; border-radius: 3px;
+  background: #030a10; color: #d6f6ff; font: inherit; cursor: pointer;
+}
+.air-install-dialog button:focus-visible { outline: 2px solid #35e6ff; outline-offset: 3px; }
+.air-install-dialog button:hover { border-color: #35e6ff; }
+.air-install-dialog button[aria-pressed="true"] { color: #35e6ff; background: #35e6ff14; border-color: #35e6ff; }
+.air-install-dialog button[hidden] { display: none; }
+.air-install-dialog .air-install-close { font-size: 24px; line-height: 1; border-color: transparent; }
+.air-install-platforms { display: flex; gap: 8px; margin: 18px 0; }
+.air-install-platforms button { flex: 1; }
+.air-install-dialog ol { padding-left: 22px; }
+.air-install-dialog li + li { margin-top: 8px; }
+.air-install-note { font-size: 12px; color: #a3c6cf; border-top: 1px solid #35e6ff33; padding-top: 14px; }
+.air-install-dialog .air-install-native { width: 100%; border-color: #35e6ff; color: #35e6ff; }
+.air-install-status { font-size: 12px; color: #ffcc4d; }
+.air-install-status:empty { display: none; }
+@media (prefers-reduced-motion: no-preference) {
+  .air-install-dialog[open] { animation: air-install-enter .16s ease-out; }
+  @keyframes air-install-enter { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+}
